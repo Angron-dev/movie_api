@@ -20,6 +20,7 @@ A Laravel-based REST API for managing movies and TV series with multilingual sup
 - **Database**: MySQL/PostgreSQL (configurable)
 - **Testing**: PHPUnit
 - **API Documentation**: RESTful design with proper HTTP status codes
+- **Docker**: Docker Compose with Laravel Sail support
 
 ## API Endpoints
 
@@ -192,6 +193,93 @@ php artisan migrate:fresh --seed
    npm run build
    ```
 
+## Docker Installation
+
+### Prerequisites
+- Docker Desktop
+- Docker Compose
+
+### Docker Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd movie_app
+   ```
+
+2. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+3. **Configure Docker environment**
+   Edit your `.env` file for Docker:
+   ```env
+   # Docker Configuration
+   APP_PORT=8080
+   VITE_PORT=5173
+   FORWARD_DB_PORT=3306
+   
+   # Database Configuration
+   DB_CONNECTION=mysql
+   DB_HOST=mysql
+   DB_PORT=3306
+   DB_DATABASE=movie_app
+   DB_USERNAME=sail
+   DB_PASSWORD=password
+   ```
+
+4. **Start the Docker environment**
+   ```bash
+   docker compose up -d
+   ```
+   
+   This will start:
+   - Laravel application container (PHP 8.5)
+   - MySQL 8.4 database container
+   - All necessary networking and volumes
+
+5. **Run migrations with seeders in Docker**
+   ```bash
+   docker compose exec laravel.test php artisan migrate --seed
+   ```
+
+6. **Install frontend assets in Docker**
+   ```bash
+   docker compose exec laravel.test npm install
+   docker compose exec laravel.test npm run build
+   ```
+
+### Docker Commands
+
+- **Start containers**: `docker compose up -d`
+- **Stop containers**: `docker compose down`
+- **View logs**: `docker compose logs -f`
+- **Execute commands**: `docker compose exec laravel.test <command>`
+- **Access shell**: `docker compose exec laravel.test bash`
+
+### Docker Development Workflow
+
+```bash
+# Start development environment
+docker compose up -d
+
+# Run tests
+docker compose exec laravel.test php artisan test
+
+# Run migrations
+docker compose exec laravel.test php artisan migrate
+
+# Clear cache
+docker compose exec laravel.test php artisan cache:clear
+
+# Install new packages
+docker compose exec laravel.test composer require <package>
+```
+
+The application will be available at `http://localhost:8080` (or whatever port you configured in `APP_PORT`).
+
 ## Available Scripts
 
 The project includes custom Composer scripts for convenience:
@@ -234,9 +322,21 @@ curl -X GET "http://localhost:8000/api/movies" \
   -H "Accept: application/json"
 ```
 
+**For Docker setup (default port 8080):**
+```bash
+curl -X GET "http://localhost:8080/api/movies" \
+  -H "Accept: application/json"
+```
+
 ### Get Movies with Pagination
 ```bash
 curl -X GET "http://localhost:8000/api/movies?per_page=10" \
+  -H "Accept: application/json"
+```
+
+**For Docker setup (default port 8080):**
+```bash
+curl -X GET "http://localhost:8080/api/movies?per_page=10" \
   -H "Accept: application/json"
 ```
 
@@ -247,9 +347,22 @@ curl -X GET "http://localhost:8000/api/movies" \
   -H "Accept-Language: pl"
 ```
 
+**For Docker setup (default port 8080):**
+```bash
+curl -X GET "http://localhost:8080/api/movies" \
+  -H "Accept: application/json" \
+  -H "Accept-Language: pl"
+```
+
 ### Get Single Movie
 ```bash
 curl -X GET "http://localhost:8000/api/movies/1" \
+  -H "Accept: application/json"
+```
+
+**For Docker setup (default port 8080):**
+```bash
+curl -X GET "http://localhost:8080/api/movies/1" \
   -H "Accept: application/json"
 ```
 
