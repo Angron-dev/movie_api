@@ -162,5 +162,5 @@ return [
 
     'tmdb_api_key' => env('TMDB_API_KEY', ''),
 
-    'supported_locales' => explode(',', env('SUPPORTED_LOCALES')),
+    'supported_locales' => explode(',', env('SUPPORTED_LOCALES', 'en,pl,de')),
 ];
