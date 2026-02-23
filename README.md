@@ -310,7 +310,7 @@ This command dispatches background jobs to fetch the data asynchronously and cal
 - `php artisan tmdb:sync-movies` - Sync movies from TMDB
 - `php artisan tmdb:sync-series` - Sync series from TMDB
 
-**Note**: These commands require valid TMDB API credentials configured in your environment variables.
+**Note**: These commands require valid TMDB API credentials configured in your environment variables. You need to add `TMDB_API_KEY` to your `.env` file.
 
 ## Development
 
