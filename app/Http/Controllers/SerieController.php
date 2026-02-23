@@ -6,31 +6,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ListRequest;
 use App\Http\Resources\SerieResource;
-use App\Services\SerieService;
+use App\Repository\Series\SerieRepository;
 use Illuminate\Http\JsonResponse;
 
 class SerieController extends Controller
 {
     public function __construct(
-        private SerieService $service
+        private SerieRepository $repository
     ) {}
 
     public function list(ListRequest $request): JsonResponse
     {
-        $series = $this->service->listPopular($request->getPerPage());
+        $series = $this->repository->getPopular($request->getPerPage());
 
         return SerieResource::collection($series)->response();
     }
 
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $serie = $this->service->findById($id);
-
-        if (!$serie) {
-            return response()->json([
-                'message' => 'Serie not found'
-            ], 404);
-        }
+        $serie = $this->repository->findById($id);
 
         return (new SerieResource($serie))->response();
     }

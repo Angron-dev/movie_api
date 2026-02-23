@@ -6,31 +6,26 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ListRequest;
 use App\Http\Resources\MovieResource;
-use App\Services\MovieService;
+use App\Repository\Movie\MovieRepository;
 use Illuminate\Http\JsonResponse;
 
 class MovieController extends Controller
 {
+
     public function __construct(
-        private MovieService $service
+        private MovieRepository $repository
     ) {}
 
     public function list(ListRequest $request): JsonResponse
     {
-        $movies = $this->service->listPopular($request->getPerPage());
+        $movies = $this->repository->getPopular($request->getPerPage());
 
         return MovieResource::collection($movies)->response();
     }
 
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $movie = $this->service->findById($id);
-
-        if (!$movie) {
-            return response()->json([
-                'message' => 'Movie not found'
-            ], 404);
-        }
+        $movie = $this->repository->findById($id);
 
         return (new MovieResource($movie))->response();
     }

@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Repository;
+declare(strict_types=1);
 
+namespace App\Repository\Series;
+
+use App\Exceptions\SerieNotFoundException;
 use App\Models\Serie;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class SerieRepository
+class EloquentSerieRepository implements SerieRepository
 {
     public function getPopular(int $perPage = 20):LengthAwarePaginator
     {
@@ -17,13 +20,18 @@ class SerieRepository
             ->paginate($perPage);
     }
 
-    public function findById(string $id): ?Serie
+    public function findById(int $id): ?Serie
     {
-        return Serie::with([
+        $serie = Serie::with([
             'translations.language',
             'genres.translations.language'
         ])
-            ->where('id', (int)$id)
-            ->first();
+            ->find($id);
+
+        if (!$serie) {
+            throw new SerieNotFoundException('Series not found');
+        }
+
+        return $serie;
     }
 }
