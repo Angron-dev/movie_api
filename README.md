@@ -288,6 +288,30 @@ The project includes custom Composer scripts for convenience:
 - `composer dev` - Start development server with queue and logs
 - `composer test` - Run the test suite
 
+## Artisan Commands
+
+### TMDB Data Fetching
+
+The application includes commands to fetch data from TMDB API:
+
+#### `tmdb:fetch`
+Fetches comprehensive data from TMDB API:
+- 50 popular movies
+- 10 popular TV series  
+- All available genres
+
+```bash
+php artisan tmdb:fetch
+```
+
+This command dispatches background jobs to fetch the data asynchronously and calls the individual sync commands.
+
+#### Individual Sync Commands
+- `php artisan tmdb:sync-movies` - Sync movies from TMDB
+- `php artisan tmdb:sync-series` - Sync series from TMDB
+
+**Note**: These commands require valid TMDB API credentials configured in your environment variables.
+
 ## Development
 
 ### Running the Development Server
