@@ -21,7 +21,6 @@ class Kernel extends HttpKernel
         'api' => [
             SubstituteBindings::class,
 
-            // ⭐ Locale tylko dla API
             SetLocaleFromHeader::class,
         ],
     ];
